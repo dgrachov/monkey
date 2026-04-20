@@ -44,6 +44,29 @@ let foobar = 676767;`
 	}
 }
 
+func testLetStatement(t *testing.T, s ast.Statement, name string) {
+	if s.TokenLiteral() != "let" {
+		t.Errorf("expected s.TokenLiteral to be 'let'. got=%q", s.TokenLiteral())
+		return
+	}
+
+	letStmt, ok := s.(*ast.LetStatement)
+	if !ok {
+		t.Errorf("expected *ast.LetStatement. got=%T", s)
+		return
+	}
+
+	if letStmt.Name.Value != name {
+		t.Errorf("expected s.Name.Value to be %s. got=%s", name, letStmt.Name.Value)
+		return
+	}
+
+	if letStmt.Name.TokenLiteral() != name {
+		t.Errorf("expected s.Name to be %s. got=%s", name, letStmt.Name)
+		return
+	}
+}
+
 func TestReturnStatement(t *testing.T) {
 	input := `return 5;
 return 10;
@@ -77,26 +100,40 @@ return 676767;`
 	}
 }
 
-func testLetStatement(t *testing.T, s ast.Statement, name string) {
-	if s.TokenLiteral() != "let" {
-		t.Errorf("expected s.TokenLiteral to be 'let'. got=%q", s.TokenLiteral())
-		return
+func TestIdentifierExpression(t *testing.T) {
+	input := "foobar;"
+
+	l := lexer.New(input)
+	p := parser.New(l)
+
+	program := p.ParseProgram()
+	if program == nil {
+		t.Fatalf("ParseProgram() returned nil")
 	}
 
-	letStmt, ok := s.(*ast.LetStatement)
+	checkParserErrors(t, p)
+
+	statementCount := len(program.Statements)
+	if statementCount != 1 {
+		t.Fatalf("expected program.Statements to contain 1 statement. got=%d", statementCount)
+	}
+
+	statement, ok := program.Statements[0].(*ast.ExpressionStatement)
 	if !ok {
-		t.Errorf("expected *ast.LetStatement. got=%T", s)
-		return
+		t.Fatalf("expected statement to be *ast.ExpressionStatement. got=%T", program.Statements[0])
 	}
 
-	if letStmt.Name.Value != name {
-		t.Errorf("expected s.Name.Value to be %s. got=%s", name, letStmt.Name.Value)
-		return
+	identifier, ok := statement.Expression.(*ast.Identifier)
+	if !ok {
+		t.Fatalf("expected expression to be *ast.Identifier. got=%T", statement.Expression)
 	}
 
-	if letStmt.Name.TokenLiteral() != name {
-		t.Errorf("expected s.Name to be %s. got=%s", name, letStmt.Name)
-		return
+	if identifier.Value != "foobar" {
+		t.Errorf("expected identifier.Value to be 'foobar'. got=%s", identifier.TokenLiteral())
+	}
+
+	if identifier.TokenLiteral() != "foobar" {
+		t.Errorf("expected identifier.TokenLiteral to be 'foobar'. got=%s", identifier.TokenLiteral())
 	}
 }
 
