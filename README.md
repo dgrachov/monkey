@@ -12,4 +12,5 @@ An interpreted programming language written in go, following the book *How to wr
 
 - [ ] Integers in identifiers (variable/function names)
 - [ ] UTF-8/Unicode support
--[ ] Hex/octal number support
+- [ ] Hex/octal number support
+- [ ] Comment support
