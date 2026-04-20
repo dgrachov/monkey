@@ -1,9 +1,10 @@
-package lexer
+package lexer_test
 
 import (
 	"fmt"
 	"testing"
 
+	"github.com/dgrachov/monkey/monkey/lexer"
 	"github.com/dgrachov/monkey/monkey/token"
 )
 
@@ -110,7 +111,7 @@ if (5 < 10) {
 		{token.EOF, ""},
 	}
 
-	l := New(input)
+	l := lexer.New(input)
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("tests[%d]", i), func(t *testing.T) {

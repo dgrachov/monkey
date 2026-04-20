@@ -1,4 +1,4 @@
-package parser
+package parser_test
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 
 	"github.com/dgrachov/monkey/monkey/ast"
 	"github.com/dgrachov/monkey/monkey/lexer"
+	"github.com/dgrachov/monkey/monkey/parser"
 )
 
 func TestLetStatement(t *testing.T) {
@@ -14,7 +15,7 @@ let y = 10;
 let foobar = 676767;`
 
 	l := lexer.New(input)
-	p := New(l)
+	p := parser.New(l)
 
 	program := p.ParseProgram()
 	if program == nil {
@@ -49,7 +50,7 @@ return 10;
 return 676767;`
 
 	l := lexer.New(input)
-	p := New(l)
+	p := parser.New(l)
 
 	program := p.ParseProgram()
 	if program == nil {
@@ -99,7 +100,7 @@ func testLetStatement(t *testing.T, s ast.Statement, name string) {
 	}
 }
 
-func checkParserErrors(t *testing.T, p *Parser) {
+func checkParserErrors(t *testing.T, p *parser.Parser) {
 	errors := p.Errors()
 	errorCount := len(errors)
 
