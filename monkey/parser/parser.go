@@ -3,8 +3,14 @@ package parser
 import (
 	"fmt"
 
+	"github.com/dgrachov/monkey/monkey/ast"
 	"github.com/dgrachov/monkey/monkey/lexer"
 	"github.com/dgrachov/monkey/monkey/token"
+)
+
+type (
+	prefixParseFunc func() ast.Expression
+	infixParseFunc  func(ast.Expression) ast.Expression
 )
 
 type Parser struct {
@@ -28,6 +34,17 @@ func New(l *lexer.Lexer) *Parser {
 
 func (p *Parser) Errors() []string {
 	return p.errors
+}
+
+func (p *Parser) parseStatement() ast.Statement {
+	switch p.curToken.Type {
+	case token.Let:
+		return p.parseLetStatement()
+	case token.Return:
+		return p.parseReturnStatement()
+	default:
+		return nil
+	}
 }
 
 func (p *Parser) nextToken() {
