@@ -3,16 +3,19 @@ package parser
 import (
 	"fmt"
 
-	"github.com/dgrachov/monkey/monkey/ast"
 	"github.com/dgrachov/monkey/monkey/lexer"
 	"github.com/dgrachov/monkey/monkey/token"
 )
 
 type Parser struct {
+	errors []string
+
 	l         *lexer.Lexer
 	curToken  token.Token
 	peekToken token.Token
-	errors    []string
+
+	prefixParseFuncs map[token.TokenType]prefixParseFunc
+	infixParseFuncs  map[token.TokenType]infixParseFunc
 }
 
 func New(l *lexer.Lexer) *Parser {
@@ -21,22 +24,6 @@ func New(l *lexer.Lexer) *Parser {
 	p.nextToken()
 
 	return p
-}
-
-func (p *Parser) ParseProgram() *ast.Program {
-	program := &ast.Program{}
-
-	for p.curToken.Type != token.EOF {
-		statement := p.parseStatement()
-
-		if statement != nil {
-			program.Statements = append(program.Statements, statement)
-		}
-
-		p.nextToken()
-	}
-
-	return program
 }
 
 func (p *Parser) Errors() []string {
@@ -51,53 +38,6 @@ func (p *Parser) nextToken() {
 func (p *Parser) peekError(tokenType token.TokenType) {
 	msg := fmt.Sprintf("expected next token to be %s, got %s instead", tokenType, p.peekToken.Type)
 	p.errors = append(p.errors, msg)
-}
-
-func (p *Parser) parseStatement() ast.Statement {
-	switch p.curToken.Type {
-	case token.Let:
-		return p.parseLetStatement()
-	case token.Return:
-		return p.parseReturnStatement()
-	default:
-		return nil
-	}
-}
-
-func (p *Parser) parseLetStatement() *ast.LetStatement {
-	statement := &ast.LetStatement{Token: p.curToken}
-
-	if !p.expectPeek(token.Identifier) {
-		return nil
-	}
-
-	statement.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
-
-	if !p.expectPeek(token.Assign) {
-		return nil
-	}
-
-	// TODO: We're skipping the expressions until we encounter a semicolon
-
-	for !p.curTokenIs(token.Semi) {
-		p.nextToken()
-	}
-
-	return statement
-}
-
-func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
-	statement := &ast.ReturnStatement{Token: p.curToken}
-
-	p.nextToken()
-
-	// TODO: We're skipping the expressions until we encounter a semicolon
-
-	for !p.curTokenIs(token.Semi) {
-		p.nextToken()
-	}
-
-	return statement
 }
 
 func (p *Parser) expectPeek(tokenType token.TokenType) bool {
@@ -116,4 +56,12 @@ func (p *Parser) curTokenIs(tokenType token.TokenType) bool {
 
 func (p *Parser) peekTokenIs(tokenType token.TokenType) bool {
 	return p.peekToken.Type == tokenType
+}
+
+func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFunc) {
+	p.prefixParseFuncs[tokenType] = fn
+}
+
+func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParseFunc) {
+	p.infixParseFuncs[tokenType] = fn
 }
