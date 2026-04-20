@@ -21,10 +21,10 @@ const (
 	SLASH       = "/"
 	LESSTHAN    = "<"
 	GREATERTHAN = ">"
-	COMMA       = ","
 
 	// Delimiters
 
+	COMMA     = ","
 	SEMICOLON = ";"
 	LPAREN    = "("
 	RPAREN    = ")"
