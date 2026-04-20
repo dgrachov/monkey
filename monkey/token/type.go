@@ -1,45 +1,79 @@
 package token
 
-type TokenType string
+type TokenType uint
 
 const (
-	ILLEGAL = "ILLEGAL"
-	EOF     = "EOF"
+	Illegal TokenType = iota
+	EOF
 
-	// Identifiers + literals
+	Identifier
+	Integer
+	True
+	False
+	If
+	Else
+	Return
 
-	IDENTIFIER = "IDENTIFIER"
-	INT        = "INT"
-	TRUE       = "TRUE"
-	FALSE      = "FALSE"
-	IF         = "IF"
-	ELSE       = "ELSE"
-	RETURN     = "RETURN"
+	Assign
+	Plus
+	Minus
+	Bang
+	Asterisk
+	Slash
+	LessThan
+	GreaterThan
+	Eq
+	NotEq
 
-	// Operators
+	Comma
+	Semi
+	LParen
+	RParen
+	LBrace
+	RBrace
 
-	ASSIGN       = "="
-	PLUS         = "+"
-	MINUS        = "-"
-	BANG         = "!"
-	ASTERISK     = "*"
-	SLASH        = "/"
-	LESS_THAN    = "<"
-	GREATER_THAN = ">"
-	EQUAL        = "=="
-	NOT_EQUAL    = "!="
-
-	// Delimiters
-
-	COMMA     = ","
-	SEMICOLON = ";"
-	LPAREN    = "("
-	RPAREN    = ")"
-	LBRACE    = "{"
-	RBRACE    = "}"
-
-	// Keywords
-
-	FUNCTION = "FUNCTION"
-	LET      = "LET"
+	Function
+	Let
 )
+
+var tokenNames = map[TokenType]string{
+	Illegal: "ILLEGAL",
+	EOF:     "EOF",
+
+	Identifier: "IDENTIFIER",
+	Integer:    "INTEGER",
+	True:       "TRUE",
+	False:      "FALSE",
+	If:         "IF",
+	Else:       "ELSE",
+	Return:     "RETURN",
+
+	Assign:      "=",
+	Plus:        "+",
+	Minus:       "-",
+	Bang:        "!",
+	Asterisk:    "*",
+	Slash:       "/",
+	LessThan:    "<",
+	GreaterThan: ">",
+	Eq:          "==",
+	NotEq:       "!=",
+
+	Comma:  ",",
+	Semi:   ";",
+	LParen: "(",
+	RParen: ")",
+	LBrace: "{",
+	RBrace: "}",
+
+	Function: "FUNCTION",
+	Let:      "LET",
+}
+
+func (t TokenType) String() string {
+	if name, ok := tokenNames[t]; ok {
+		return name
+	}
+
+	return "UNKNOWN"
+}
