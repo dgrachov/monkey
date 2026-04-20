@@ -51,9 +51,9 @@ func (l *Lexer) NextToken() token.Token {
 	case '/':
 		tok = newToken(token.SLASH, l.ch)
 	case '<':
-		tok = newToken(token.LESSTHAN, l.ch)
+		tok = newToken(token.LESS_THAN, l.ch)
 	case '>':
-		tok = newToken(token.GREATERTHAN, l.ch)
+		tok = newToken(token.GREATER_THAN, l.ch)
 	case ',':
 		tok = newToken(token.COMMA, l.ch)
 	case ';':

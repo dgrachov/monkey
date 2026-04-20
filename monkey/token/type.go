@@ -18,16 +18,16 @@ const (
 
 	// Operators
 
-	ASSIGN      = "="
-	PLUS        = "+"
-	MINUS       = "-"
-	BANG        = "!"
-	ASTERISK    = "*"
-	SLASH       = "/"
-	LESSTHAN    = "<"
-	GREATERTHAN = ">"
-	EQ          = "=="
-	NOT_EQ      = "!="
+	ASSIGN       = "="
+	PLUS         = "+"
+	MINUS        = "-"
+	BANG         = "!"
+	ASTERISK     = "*"
+	SLASH        = "/"
+	LESS_THAN    = "<"
+	GREATER_THAN = ">"
+	EQUAL        = "=="
+	NOT_EQUAL    = "!="
 
 	// Delimiters
 
