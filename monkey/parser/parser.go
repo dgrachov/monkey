@@ -27,6 +27,8 @@ type Parser struct {
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{l: l, prefixParseFuncs: make(map[token.TokenType]prefixParseFunc), infixParseFuncs: make(map[token.TokenType]infixParseFunc)}
 
+	// Read two tokens, so curToken and peekToken are both set
+	p.nextToken()
 	p.nextToken()
 
 	p.registerPrefix(token.Identifier, p.parseIdentifier)
