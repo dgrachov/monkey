@@ -25,9 +25,11 @@ type Parser struct {
 }
 
 func New(l *lexer.Lexer) *Parser {
-	p := &Parser{l: l}
+	p := &Parser{l: l, prefixParseFuncs: make(map[token.TokenType]prefixParseFunc), infixParseFuncs: make(map[token.TokenType]infixParseFunc)}
 
 	p.nextToken()
+
+	p.registerPrefix(token.Identifier, p.parseIdentifier)
 
 	return p
 }
@@ -43,7 +45,7 @@ func (p *Parser) parseStatement() ast.Statement {
 	case token.Return:
 		return p.parseReturnStatement()
 	default:
-		return nil
+		return p.parseExpressionStatement()
 	}
 }
 
