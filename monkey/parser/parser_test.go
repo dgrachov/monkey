@@ -21,6 +21,8 @@ let foobar = 676767;`
 		t.Fatalf("ParseProgram() returned nil")
 	}
 
+	checkParserErrors(t, p)
+
 	statementCount := len(program.Statements)
 	if statementCount != 3 {
 		t.Fatalf("expected program.Statements to contain 3 statements. got=%d", statementCount)
@@ -62,4 +64,21 @@ func testLetStatement(t *testing.T, s ast.Statement, name string) {
 		t.Errorf("expected s.Name to be %s. got=%s", name, letStmt.Name)
 		return
 	}
+}
+
+func checkParserErrors(t *testing.T, p *Parser) {
+	errors := p.Errors()
+	errorCount := len(errors)
+
+	if errorCount == 0 {
+		return
+	}
+
+	for _, msg := range errors {
+		t.Errorf("parser error: %q", msg)
+	}
+
+	t.Errorf("parser has %d errors", errorCount)
+
+	t.FailNow()
 }
