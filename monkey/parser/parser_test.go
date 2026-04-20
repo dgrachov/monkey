@@ -43,6 +43,39 @@ let foobar = 676767;`
 	}
 }
 
+func TestReturnStatement(t *testing.T) {
+	input := `return 5;
+return 10;
+return 676767;`
+
+	l := lexer.New(input)
+	p := New(l)
+
+	program := p.ParseProgram()
+	if program == nil {
+		t.Fatalf("ParseProgram() returned nil")
+	}
+
+	checkParserErrors(t, p)
+
+	statementCount := len(program.Statements)
+	if statementCount != 3 {
+		t.Fatalf("expected program.Statements to contain 3 statements. got=%d", statementCount)
+	}
+
+	for _, statement := range program.Statements {
+		returnStatement, ok := statement.(*ast.ReturnStatement)
+		if !ok {
+			t.Errorf("statement is not *ast.ReturnStatement. got=%T", statement)
+			continue
+		}
+
+		if returnStatement.TokenLiteral() != "return" {
+			t.Errorf("expected returnStatement.TokenLiteral to be 'return'. got=%q", returnStatement.TokenLiteral())
+		}
+	}
+}
+
 func testLetStatement(t *testing.T, s ast.Statement, name string) {
 	if s.TokenLiteral() != "let" {
 		t.Errorf("expected s.TokenLiteral to be 'let'. got=%q", s.TokenLiteral())
