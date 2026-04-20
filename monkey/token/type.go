@@ -10,6 +10,11 @@ const (
 
 	IDENTIFIER = "IDENTIFIER"
 	INT        = "INT"
+	TRUE       = "TRUE"
+	FALSE      = "FALSE"
+	IF         = "IF"
+	ELSE       = "ELSE"
+	RETURN     = "RETURN"
 
 	// Operators
 
