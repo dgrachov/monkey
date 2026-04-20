@@ -6,6 +6,7 @@ An interpreted programming language written in go, following the book *How to wr
 
 ## Technical
 
+- [x] Token types as enums instead of strings
 - [ ] Generalize `readX` functions in `Lexer` struct by passing the `isX` function as a param
 
 ## Functional
@@ -14,3 +15,4 @@ An interpreted programming language written in go, following the book *How to wr
 - [ ] UTF-8/Unicode support
 - [ ] Hex/octal number support
 - [ ] Comment support
+- [ ] Loops
