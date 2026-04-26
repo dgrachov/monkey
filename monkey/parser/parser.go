@@ -32,6 +32,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.nextToken()
 
 	p.registerPrefix(token.Identifier, p.parseIdentifier)
+	p.registerPrefix(token.Integer, p.parseIntegerLiteral)
 
 	return p
 }
